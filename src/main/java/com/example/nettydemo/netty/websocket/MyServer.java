@@ -39,6 +39,7 @@ public class MyServer {
                             // 可以看到 WebSocketFrame 下面有六个子类
                             // 浏览器请求时 ws://localhost:7001/xxx 表示请求的uri
                             // WebSocketServerProtocolHandler 核心功能是将 http 协议升级为 ws 协议，保持长连接
+                            // 通过一个状态码 101
                             pipeline.addLast(new WebSocketServerProtocolHandler("/hello"));
 
                             // 自定义 handler ，处理业务逻辑
