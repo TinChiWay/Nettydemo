@@ -9,14 +9,18 @@ import io.netty.util.concurrent.GlobalEventExecutor;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class GroupChatServerHandler extends SimpleChannelInboundHandler<String> {
 
+    // public static final Map<User, Channel> channerMap = new ConcurrentHashMap<>();
 
     // 定义一个channel组，管理所有的channel
     // GlobalEventExecutor.INSTANCE) 是全局的事件执行器，是一个单例
-    private static ChannelGroup channelGroup = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+    private static final ChannelGroup channelGroup = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
 
     /**
      * handlerAdded 表示连接建立，一旦连接，第一个被执行
@@ -28,6 +32,8 @@ public class GroupChatServerHandler extends SimpleChannelInboundHandler<String> 
         // 该方法会将channelGroup中所有的channel遍历，并发送消息，不需要自己遍历
         channelGroup.writeAndFlush("[客户端]" + ctx.channel().remoteAddress() + "加入聊天" + sdf.format(new Date()) + "\n");
         channelGroup.add(ctx.channel());
+
+        // channerMap.put(new User(10, "123"), ctx.channel());
     }
 
 
