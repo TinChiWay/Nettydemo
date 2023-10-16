@@ -50,6 +50,36 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.0</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.xolstice.maven.plugins</groupId>
+                <artifactId>protobuf-maven-plugin</artifactId>
+                <version>0.6.1</version>
+                <configuration>
+                    <protocExecutable>/usr/local/bin/protoc</protocExecutable>
+                    <protoSourceRoot>src/main/proto</protoSourceRoot>
+                    <outputDirectory>src/main/java</outputDirectory>
+                    <useArgumentFile>true</useArgumentFile>
+                    <checkStaleness>false</checkStaleness> <!-- 每次执行时都会调用 protoc 编译，但这可以通过以下配置选项覆盖 -->
+                    <clearOutputDirectory>false</clearOutputDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>test-compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 

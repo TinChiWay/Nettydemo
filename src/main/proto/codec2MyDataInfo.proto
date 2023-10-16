@@ -1,0 +1,32 @@
+syntax = "proto3";
+// 快速解析
+option optimize_for = SPEED;
+option java_package = "com.example.nettydemo.netty.codec2";
+option java_outer_classname = "MyDataInfo";
+
+
+message MyMessage {
+    enum DataType {
+        StudentType = 0;
+        WorkerType = 1;
+    }
+    // 1. 传输的数据类型
+    // 2. 字段的规则
+    // 3. 字段的名字
+    // 4. 字段的标识
+    DataType dataType = 1;
+    oneof dataBody{
+        Student student = 2;
+        Worker worker = 3;
+    }
+}
+
+message Student{
+    int32 id = 1;
+    string name = 2;
+}
+
+message Worker{
+    string name = 1;
+    int32 age = 2;
+}
