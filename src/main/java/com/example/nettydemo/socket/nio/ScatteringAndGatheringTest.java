@@ -18,7 +18,7 @@ public class ScatteringAndGatheringTest {
 
         //使用 ServerSocketChannel 和 SocketChannel 网络
         ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
-        InetSocketAddress inetSocketAddress = new InetSocketAddress(7000);
+        InetSocketAddress inetSocketAddress = new InetSocketAddress(7001);
 
         //绑定端口到 socket，并启动
         serverSocketChannel.socket().bind(inetSocketAddress);
