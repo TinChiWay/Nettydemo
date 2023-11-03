@@ -15,13 +15,17 @@
  */
 package com.example.nettydemo.netty.echo;
 
+import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.util.concurrent.DefaultEventExecutorGroup;
+import io.netty.util.concurrent.EventExecutorGroup;
 import lombok.extern.slf4j.Slf4j;
 
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.Callable;
 
 /**
  * Handler implementation for the echo server.
@@ -30,17 +34,36 @@ import java.nio.charset.StandardCharsets;
 @Slf4j
 public class EchoServerHandler extends ChannelInboundHandlerAdapter {
 
+    private static final EventExecutorGroup GROUP = new DefaultEventExecutorGroup(16);
+
+
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         log.info("echo server handler:{}", Thread.currentThread().getName());
-        ctx.channel().eventLoop().execute(() -> {
+        //ctx.channel().eventLoop().execute(() -> {
+        //    try {
+        //        Thread.sleep(10 * 1000);
+        //        log.info("echo server execute:{}", Thread.currentThread().getName());
+        //        ctx.writeAndFlush(Unpooled.copiedBuffer("hello,小喵喵 ～ 2", StandardCharsets.UTF_8));
+        //    } catch (InterruptedException e) {
+        //        log.warn("发生异常", e);
+        //    }
+        //});
+        GROUP.submit(() -> {
+            // 接收客户端消息
+            ByteBuf buf = (ByteBuf) msg;
+            byte[] bytes = new byte[buf.readableBytes()];
+            buf.readBytes(bytes);
+            String body = new String(bytes, StandardCharsets.UTF_8);
             try {
-                Thread.sleep(10 * 1000);
-                log.info("echo server execute:{}", Thread.currentThread().getName());
-                ctx.writeAndFlush(Unpooled.copiedBuffer("hello,小喵喵 ～ 2", StandardCharsets.UTF_8));
+                Thread.sleep(9 * 1000);
             } catch (InterruptedException e) {
-                log.warn("发生异常", e);
+                throw new RuntimeException(e);
             }
+            log.info("echo server execute:{}", Thread.currentThread().getName());
+            ctx.writeAndFlush(Unpooled.copiedBuffer("hello,小喵喵 ～ 1", StandardCharsets.UTF_8));
+
+            return null;
         });
         log.info("go on");
 
